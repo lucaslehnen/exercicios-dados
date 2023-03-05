@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  site
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  nginx
+  namespace: site
+spec:
+  selector:
+    app:  nginx
+  type:  LoadBalancer
+  ports:
+  - name:  nginx
+    port:  5678
+    targetPort:  5678
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: site
+  labels:
+    name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 5678
